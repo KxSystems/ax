@@ -7759,7 +7759,7 @@ system "d .z.m.axskia";
 .z.m.axskia.SUPPORTS:`integers`pixmap`multigeom!111b;
 // @qlintsuppress MISSING_OVERVIEW(1) MISSING_RETURNS(1)
 
-([.z.m.axskia.init;.z.m.axskia.new;.z.m.axskia.delete;.z.m.axskia.addCircle;.z.m.axskia.addLine;.z.m.axskia.addDashedLine;.z.m.axskia.addPath;.z.m.axskia.addRect;.z.m.axskia.multiFillCircle;.z.m.axskia.multiStrokeCircle;.z.m.axskia.setFontFace;.z.m.axskia.i.addText;.z.m.axskia.i.addTextMiddleAnchor;.z.m.axskia.i.addTextLeftAnchor;.z.m.axskia.i.addTextRightAnchor;.z.m.axskia.setBackgroundColour;.z.m.axskia.i.setFillColour;.z.m.axskia.i.setStrokeColour;.z.m.axskia.setStrokeWidth;.z.m.axskia.toPNG;.z.m.axskia.setFontSize;.z.m.axskia.textWidth;.z.m.axskia.rotate;.z.m.axskia.restore;.z.m.axskia.multiFillRect;.z.m.axskia.multiStrokeRect;.z.m.axskia.multiLine;.z.m.axskia.multiFillPath;.z.m.axskia.multiStrokePath;.z.m.axskia.addPixels]):use`..skia;
+([.z.m.axskia.init;.z.m.axskia.new;.z.m.axskia.delete;.z.m.axskia.addCircle;.z.m.axskia.addLine;.z.m.axskia.addDashedLine;.z.m.axskia.addPath;.z.m.axskia.addRect;.z.m.axskia.multiFillCircle;.z.m.axskia.multiStrokeCircle;.z.m.axskia.setFontFace;.z.m.axskia.i.addText;.z.m.axskia.i.addTextMiddleAnchor;.z.m.axskia.i.addTextLeftAnchor;.z.m.axskia.i.addTextRightAnchor;.z.m.axskia.setBackgroundColour;.z.m.axskia.i.setFillColour;.z.m.axskia.i.setStrokeColour;.z.m.axskia.setStrokeWidth;.z.m.axskia.toPNG;.z.m.axskia.setFontSize;.z.m.axskia.textWidth;.z.m.axskia.rotate;.z.m.axskia.restore;.z.m.axskia.multiFillRect;.z.m.axskia.multiStrokeRect;.z.m.axskia.multiLine;.z.m.axskia.multiFillPath;.z.m.axskia.multiStrokePath;.z.m.axskia.addPixels;.z.m.axskia.toRGB]):use`..skia;
 
 .z.m.axskia.addText : {[skia; x; y; text]
     .z.m.axskia.errorOnInvalidUTF8 text;
@@ -16490,6 +16490,10 @@ system "d .z.m.axskiaw";
     : .z.m.axskia.toPNG ptr;
     }
 
+.z.m.axskiaw.i.toRGB:{[ptr]
+    : .z.m.axskia.toRGB ptr;
+    }
+
 
 .z.m.axskiaw.init:{[]
     }
@@ -21514,6 +21518,30 @@ system "d .z.m.qp";
     : .z.m.gg.spec.with.facet[x] $[100 <= type sp; sp t; sp];
     }
 
+
+.z.m.sixel:{[w;h;c;b]
+    rgb:3#'c cut b;
+    weight:count@'group rgb;
+    maxd:{(l?ml;ml:max l:abs (-) . (min;max)@\:x)};
+    medcut:{  r:$[type first x;
+                  {(x#y;x _ y)}[;o] first where {$[all x;01b;x]} (sum[w]%2)<sums w:y o:x idesc x[;z[x]@0];
+                  (x _ i),{(x#y;x _ y)}[;o] first where {$[all x;01b;x]} (sum[w]%2)<sums w:y o:x[i] idesc x[i][;m[i:{x?max x} (m:z@'x)[;1];0]]
+                  ];
+                  if[any w:()~/:r;r:r _ first where w];r}[;weight;maxd];
+    p:255 medcut/distinct rgb;
+    p:distinct "i"$ weight[p] wavg' p;
+    rgb:"i"$rgb;
+    idxmap:(w;h)#((distinct rgb)!{d?min d:sum@/:abs x-/:y}[;p] each distinct rgb)@rgb;
+    head:"\033Pq\"1;1;",string[count[first idxmap]],";",string[count idxmap];
+    pallet:{[i;b;g;r]"#",string[i],";2;",string[r],";",string[g],";",string[b]} ./: til[count p],'(100*p) div 255;
+    footer:"\033\\";
+    // TODO: Repeats done properly with counts
+    if[md:count[idxmap] mod 6;idxmap,:(6-md)#enlist count[first idxmap]#0Wj];
+    idxc:6 cut idxmap;
+    body:"-" sv {pal:distinct raze x;r:("#",'string[pal]),'`char$63+sum@/:(2 xexp til 6)*/:pal=\:x;"$" sv r} each idxc;
+    head,(raze pallet),body,footer
+  }
+
 // @subcategory Rendering
 // @fileOverview
 // Render a visual specification at the given width and height, and send the 
@@ -21526,9 +21554,17 @@ system "d .z.m.qp";
 // @example
 // .z.m.qp.go[500;500] .z.m.qp.point[([]x:til 45); `x; `x; ::]
 .z.m.qp.go:{[w; h; spec]
-    '" qp.go` can only be used within the Developer and Analyst IDE for interaction. Use  qp.png` instead."
+    if[.z.k < 2026.04.10;'"sixel not supported with this version of KDB-X. Requires 2026.04.10. Use qp.png or upgrade"];
+    -1 .z.m.qp.i.go[w; h; spec];
     }
 
+.z.m.qp.i.go:{[w; h; spec]
+    o:.z.m.gg.i.DEFAULTRENDERER.render;
+    .z.M.gg.i.DEFAULTRENDERER.render set {:.z.m.axskiaw.i.toRGB x};
+    r:.z.m.sixel . {x . `output`bytes} .z.m.qp.display[w;h] spec;
+    .z.M.gg.i.DEFAULTRENDERER.render set o;
+    r
+    }
 
 .z.m.qp.grid:{[grid; speclist]
     : .z.m.qp.layout[`grid; grid] speclist;

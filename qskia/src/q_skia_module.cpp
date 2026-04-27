@@ -33,6 +33,7 @@ K k_skia_set_fill_colour(K k_skia, K k_argb);
 K k_skia_set_stroke_colour(K k_skia, K k_argb);
 K k_skia_set_stroke_width(K k_skia, K k_width);
 K k_skia_render_to_memory(K k_skia);
+K k_skia_render_to_rgb(K k_skia);
 
 K k_skia_set_font_size(K k_skia, K k_font_size);
 K k_skia_measure_text(K k_skia, K k_str);
@@ -61,7 +62,7 @@ EXPORT K1(kexport) {
     _(addTextLeftAnchor,add_text_left_anchor,4)_(addTextRightAnchor,add_text_right_anchor,4)
     _(setFillColour,set_fill_colour,2)_(setStrokeColour,set_stroke_colour,2)_(setStrokeWidth,set_stroke_width,2)
 
-    _(setBackgroundColour,set_background_colour,2)_(toPNG,render_to_memory,1)
+    _(setBackgroundColour,set_background_colour,2)_(toPNG,render_to_memory,1)_(toRGB,render_to_rgb,1)
     _(setFontSize,set_font_size,2)_(textWidth,measure_text,2)
     _(rotate,rotate_canvas,4)_(restore,restore_canvas,1)
 

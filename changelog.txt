@@ -1,0 +1,4 @@
+/ changes to ax since initial release
+
+2026.04.27
+qp.go now sends to stdout sixel encoding of image (previously returned error). requires fixes present in KDB-X 2026.04.10
