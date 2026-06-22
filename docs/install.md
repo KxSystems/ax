@@ -1,16 +1,34 @@
 # ax kdb-x installation
 
-[`graphics.q`](../ax/graphics.q) and [`qdoc.q`](../ax/qdoc.q) is written as a module, under kdb-x's module framework. Though modules can be loaded from anywhere if added to your `$QPATH`, we recommend installing to the `$HOME/.kx/mod/kx` folder. This is to avoid name clashes with other user defined modules, as well as providing a location for other KX modules to cross reference eachother
+[`graphics.q`](../ax/graphics.q) and [`qdoc.q`](../ax/qdoc.q) is written as a module, under kdb-x's module framework. 
+Though modules can be loaded from anywhere if added to your `$QPATH`, we recommend installing under a `kx` folder within your `$QPATH`. This is to avoid name clashes with other user defined modules, as well as providing a name for other KX modules to cross reference each other.
 
+## Installing a Release
+
+It is recommended that a user install this module through a release. 
+
+[Download a release](https://github.com/KxSystems/ax/releases) and then unzip to your module directory. The following example assumes the default install location for KDB-X.
+
+```
+unzip ax-l64.zip -d ~/.kx/mod
+```
+
+## Installing from Source
 
 ```bash
-export QPATH="$QPATH:$HOME/.kx/mod"
-mkdir -p ~/.kx/mod/kx/
+git clone https://github.com/KxSystems/ax.git
+cd ax
+```
+
+After following the build instructions, move `ax` into your module directory, under `kx`. The following example assumes the default install location for KDB-X.
+
+```bash
+mkdir -p ~/.kx/mod/kx
 cp -r ax ~/.kx/mod/kx/
 ```
 
-> [!NOTE]
-> The above assumes the current working directory is the root of this project. If using a pre-built release, first `unzip <arch>-ax.zip -d ax` 
+
+## Next Steps
 
 Now from anywhere you can import ggplot and qdocs.
 
@@ -34,4 +52,4 @@ doctest| +`ref`test`success`result`error!(`symbol$();();`boolean$();();())
 ```
 
 
-Add the `QPATH` export to your bashrc or equivalent to persist across sessions.
+You're ready to check out some of the examples and documentation for [GGPlot](https://code.kx.com/analyst/libraries/grammar-of-graphics/) and [qDoc](https://code.kx.com/developer/libraries/documentation-generator/)

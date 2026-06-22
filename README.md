@@ -15,6 +15,7 @@ use`kx.fusion:pcre2
 ```
 
 The install instructions for that can be found [here](https://github.com/KxSystems/fusionx/blob/main/README.md)
+
 ## Build Instructions
 
 These instructions are for building from source, the pre-built module is available under [releases](https://github.com/KxSystems/ax/tags). 
@@ -44,3 +45,9 @@ Simply replace `.qp`, `.gg` and `.qd` with `qp`, `gg` and `qd` respectively when
 
 :point_right: [GGPlot](https://code.kx.com/analyst/libraries/grammar-of-graphics/)
 :point_right: [qDoc](https://code.kx.com/developer/libraries/documentation-generator/)
+
+## Notice
+
+Copyright (c) 2026 KX Systems, Inc.
+
+Licensed under the Apache License, Version 2.0.
