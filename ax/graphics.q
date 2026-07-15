@@ -21531,7 +21531,7 @@ system "d .z.m.qp";
     p:255 medcut/distinct rgb;
     p:distinct "i"$ weight[p] wavg' p;
     rgb:"i"$rgb;
-    idxmap:(w;h)#((distinct rgb)!{d?min d:sum@/:abs x-/:y}[;p] each distinct rgb)@rgb;
+    idxmap:(h;w)#((distinct rgb)!{d?min d:sum@/:abs x-/:y}[;p] each distinct rgb)@rgb;
     head:"\033Pq\"1;1;",string[count[first idxmap]],";",string[count idxmap];
     pallet:{[i;b;g;r]"#",string[i],";2;",string[r],";",string[g],";",string[b]} ./: til[count p],'(100*p) div 255;
     footer:"\033\\";
