@@ -6028,27 +6028,33 @@ system "d .z.m.pcre2";
   if[11h~abs type str;str:string str];
   if[-10h~type str;str:enlist str];
   if[-10h~type pattern;pattern:enlist pattern];
-  op:$[0b~opts`firstMatch;raze;first];
+  firstOnly:$[99h~type opts; `firstMatch in key opts; 0b] and 1b~opts`firstMatch;
   m:$[0h~type str;
     {[pattern;str;opts]@[.z.m.fpcre2.match[pattern;;opts`compile];str;([x0:()])]}[pattern;;opts] each str;
     @[.z.m.fpcre2.match[pattern;;opts`compile];str;([x0:()])]];
   if[m~();:`long$()];
-  result:@[{[op;x]op@'1_''x}[op;];m[`x0];{[op;x;f]op@'1_'x}[op;m[`x0];]];
-  :result
+  offsets:{[firstOnly;x]
+    if[.z.m.axq.isEmpty x;:()];
+    :raze 1_/:$[firstOnly;1#x;x];
+    }[firstOnly;];
+
+  :$[0h~type str;
+    offsets each m[;`x0];
+    offsets m`x0];
  }
 
 .z.m.pcre2.test:{[pattern;str;opts]
   if[str~();:`boolean$()];
   if[-10h~type str;str:enlist str];
   if[-10h~type pattern;pattern:enlist pattern];
-  r:.z.m.pcre2.imatch[pattern;str;opts];
-  
-  if[r~`long$();:`boolean$()];
-  if[not 0h~type r;:1b];
-  if[r~();:0b];
-  result:not ()~/:r;
-  :result
+  if[11h~abs type str;str:string str];
 
+  r:.z.m.pcre2.imatch[pattern;str;opts];
+  if[r~`long$();:`boolean$()];
+
+  :$[0h~type str;
+    not () ~/: r;
+    not .z.m.axq.isEmpty r];
   }
 
 .z.m.pcre2.replace:{[pattern;str;replace;opts]
@@ -10899,13 +10905,17 @@ system "d .z.m.axqc";
 // @param start {long}
 // @returns {(long;long)}
 .z.m.axqc.checkAgainstRegex:{[regex; start]
-    // @qlintsuppress DEPRECATED_FUNCTION(1)
-    // match : .z.m.pcre.execute[regex; 0i; .z.m.axqc.local.tokLoc[start] _ .z.m.axqc.INPUT;  0; 0];
-    match : .z.m.pcre2.imatch[regex;.z.m.axqc.local.tokLoc[start] _ .z.m.axqc.INPUT;::];
-    if[match~();:(start;start+1)];
-    :(start;start + 1 + first match)
-
+    // The first character of the start token, which the match offsets are relative to
+    offset : .z.m.axqc.local.tokLoc start;
+    match : 2 # .z.m.pcre2.imatch[regex; offset _ .z.m.axqc.INPUT; ::];
+    if[2 <> count match; :(start; start+1)];
+    if[0 <> first match; :(start; start+1)];
+    if[(=). match; :(start; start+1)];
+    matchEnd : offset + last match;
+    if[not matchEnd in .z.m.axqc.local.tokLoc; :(start; start+1)];
+    :(start; 1 + last where .z.m.axqc.local.tokLoc <= matchEnd - 1);
     }
+
 // @fileOverview Magic null is the second value in the list (value {[x;y]}[;1])
 // It represents a missing parameter, so testing for it is difficult,
 // as functions don't evaluate when they are passed magic null.
@@ -12023,7 +12033,9 @@ system "d .z.m.axqc";
         ))
 // @fileOverview A regex to find tokens which are symbols
 // @qlintsuppress DEPRECATED_FUNCTION(1)
-.z.m.axqc.symbolRegex:.z.m.fpcre2.compile["`([a-zA-Z0-9.][a-zA-Z0-9._]*(:[a-zA-Z0-9._/:]*)?|:[a-zA-Z0-9._/:]*)?";::]; /dnl
+// Anchored so it only matches the symbol at the token being checked, rather than a
+// later backtick in the remaining input
+.z.m.axqc.symbolRegex:.z.m.fpcre2.compile["^`([a-zA-Z0-9.][a-zA-Z0-9._]*(:[a-zA-Z0-9._/:]*)?|:[a-zA-Z0-9._/:]*)?";::]; /dnl
 
 // @fileOverview Regexes related to identifying number, data and time primitives
 // The time regex also contains 0:, 1: and 2: to be compatible with the existing code
