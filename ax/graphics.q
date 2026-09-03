@@ -7759,7 +7759,7 @@ system "d .z.m.axskia";
 .z.m.axskia.SUPPORTS:`integers`pixmap`multigeom!111b;
 // @qlintsuppress MISSING_OVERVIEW(1) MISSING_RETURNS(1)
 
-([.z.m.axskia.init;.z.m.axskia.new;.z.m.axskia.delete;.z.m.axskia.addCircle;.z.m.axskia.addLine;.z.m.axskia.addDashedLine;.z.m.axskia.addPath;.z.m.axskia.addRect;.z.m.axskia.multiFillCircle;.z.m.axskia.multiStrokeCircle;.z.m.axskia.setFontFace;.z.m.axskia.i.addText;.z.m.axskia.i.addTextMiddleAnchor;.z.m.axskia.i.addTextLeftAnchor;.z.m.axskia.i.addTextRightAnchor;.z.m.axskia.setBackgroundColour;.z.m.axskia.i.setFillColour;.z.m.axskia.i.setStrokeColour;.z.m.axskia.setStrokeWidth;.z.m.axskia.toPNG;.z.m.axskia.setFontSize;.z.m.axskia.textWidth;.z.m.axskia.rotate;.z.m.axskia.restore;.z.m.axskia.multiFillRect;.z.m.axskia.multiStrokeRect;.z.m.axskia.multiLine;.z.m.axskia.multiFillPath;.z.m.axskia.multiStrokePath;.z.m.axskia.addPixels;.z.m.axskia.toRGB]):use`..skia;
+([.z.m.axskia.init;.z.m.axskia.new;.z.m.axskia.delete;.z.m.axskia.addCircle;.z.m.axskia.addLine;.z.m.axskia.addDashedLine;.z.m.axskia.addPath;.z.m.axskia.addRect;.z.m.axskia.multiFillCircle;.z.m.axskia.multiStrokeCircle;.z.m.axskia.setFontFace;.z.m.axskia.i.addText;.z.m.axskia.i.addTextMiddleAnchor;.z.m.axskia.i.addTextLeftAnchor;.z.m.axskia.i.addTextRightAnchor;.z.m.axskia.setBackgroundColour;.z.m.axskia.i.setFillColour;.z.m.axskia.i.setStrokeColour;.z.m.axskia.setStrokeWidth;.z.m.axskia.toPNG;.z.m.axskia.setFontSize;.z.m.axskia.textWidth;.z.m.axskia.rotate;.z.m.axskia.restore;.z.m.axskia.multiFillRect;.z.m.axskia.multiStrokeRect;.z.m.axskia.multiLine;.z.m.axskia.multiFillPath;.z.m.axskia.multiStrokePath;.z.m.axskia.addPixels;.z.m.axskia.toRGB]):@[use;`kx.skia;{use`..skia}]
 
 .z.m.axskia.addText : {[skia; x; y; text]
     .z.m.axskia.errorOnInvalidUTF8 text;
@@ -7781,7 +7781,7 @@ system "d .z.m.axskia";
     : i.addTextRightAnchor[skia; x; y; text];
     };
 
-@[.z.m.axskia.init; .Q.rp "::../"; {}];
+@[.z.m.axskia.init; $[not ""~condaPrefix:getenv `CONDA_PREFIX;condaPrefix;.Q.rp "::../"]; {}];
  
 .z.m.axskia.setFillColour:   i.setFillColour;
 .z.m.axskia.setStrokeColour: i.setStrokeColour;

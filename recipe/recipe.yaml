@@ -1,0 +1,49 @@
+context:
+  version: ${{ env.get("PKGVER", default="0.0.1") }}
+
+package:
+  name: q-kx-ax
+  version: ${{ version }}
+
+source:
+  path: ..
+  filter:
+    include:
+       - ax/**
+       - qbitops/**
+       - LICENSE
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - if: not win
+      then: ${{ compiler("c") }}
+    - make
+  run:
+    - q-kx-pcre2
+    - q-kx-skia
+
+tests:
+   - script:
+      - test -f ${PREFIX}/lib/q/mod/kx/ax/init.q
+      - test -f ${PREFIX}/lib/q/mod/kx/ax/graphics.q
+      - test -f ${PREFIX}/lib/q/mod/kx/ax/qdoc.q
+      - if: linux and x86_64
+        then:
+        - test -f ${PREFIX}/lib/q/mod/kx/ax/bitops.li64.so
+      - if: linux and aarch64
+        then:
+        - test -f ${PREFIX}/lib/q/mod/kx/ax/bitops.la64.so
+      - if: osx and x86_64
+        then:
+        - test -f ${PREFIX}/lib/q/mod/kx/ax/bitops.mi64.so
+      - if: osx and aarch64
+        then:
+        - test -f ${PREFIX}/lib/q/mod/kx/ax/bitops.ma64.so
+
+about:
+  license_file:
+    - LICENSE
+    - qbitops/licenses.txt

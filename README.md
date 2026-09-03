@@ -1,6 +1,6 @@
 # AX Module
 
-The kdb-x ax module exposes components from the [ax-libraries](https://code.kx.com/developer/libraries/#q-libraries) under the modules framework. The current components that have been ported across are:
+The KDB-X AX module exposes components from the [AxLibraries](https://code.kx.com/developer/libraries/#q-libraries) using the modules framework. The current components that have been ported across are:
 
 - [Grammar of Graphics](https://code.kx.com/developer/ggplot/) (ggplot) 
 - [qDoc](https://code.kx.com/developer/libraries/#qdoc)
@@ -8,24 +8,20 @@ The kdb-x ax module exposes components from the [ax-libraries](https://code.kx.c
 
 ## Prerequisites
 
-Fusionx pcre2 is a required module, and needs to be callable via
-
+The KX Fusionx PCRE2 and Skia modules are required dependencies and need to be loaded via
 ```q
 use`kx.fusion:pcre2
+use`kx.skia
 ```
-
-The install instructions for that can be found [here](https://github.com/KxSystems/fusionx/blob/main/README.md)
+Respective installation instructions:
+* [PCRE2](https://github.com/KxSystems/fusionx/blob/main/README.md)
+* [Skia](https://github.com/KxSystems/qskia/blob/main/README.md)
 
 ## Build Instructions
 
-These instructions are for building from source, the pre-built module is available under [releases](https://github.com/KxSystems/ax/tags). 
+The AX module contains a bitwise operations submodule (`qbitops`) which has a compilation step. 
 
-Outside of fusionx pcre2, there are two kdb-x submodules included in this repo required for ggplot specifically. These are:
-
-- [qskia](./qskia) -> skia.$A.(so|dll)
-- [qbitops](./qbitops) -> bitops.$A.(so|dll)
-
-After building each from their respective directories, move the built shared libraries to the [ax](./ax) folder. Now it is ready to be installed.
+:point_right: [`Build guide`](docs/build.md)
 
 ## Installation Documentation
 
@@ -33,7 +29,7 @@ After building each from their respective directories, move the built shared lib
 
 ## API Documentation
 
-The APIs match the ax-libraries APIs, with the benefit of being loadable to any namespace.
+The APIs match the AxLibraries APIs, with the benefit of being loadable to any namespace.
 
 ```q
 ([qp;gg;qd]):use`kx.ax;         // all components
@@ -41,7 +37,7 @@ The APIs match the ax-libraries APIs, with the benefit of being loadable to any 
 ([qp;gg]):use`kx.ax.graphics;
 ```
 
-Simply replace `.qp`, `.gg` and `.qd` with `qp`, `gg` and `qd` respectively when referencing the ax-libraries API specifications (or the namespace you have chosen to assign the components to).
+Simply replace `.qp`, `.gg` and `.qd` with `qp`, `gg` and `qd` respectively when referencing the AxLibraries API specifications (or the namespace you have chosen to assign the components to).
 
 :point_right: [GGPlot](https://code.kx.com/analyst/libraries/grammar-of-graphics/)
 :point_right: [qDoc](https://code.kx.com/developer/libraries/documentation-generator/)
