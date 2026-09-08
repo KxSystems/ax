@@ -7781,7 +7781,18 @@ system "d .z.m.axskia";
     : i.addTextRightAnchor[skia; x; y; text];
     };
 
-@[.z.m.axskia.init; $[not ""~condaPrefix:getenv `CONDA_PREFIX;condaPrefix;.Q.rp "::../"]; {}];
+{
+  b:@[{use x;1b};`kx.skia;{0b}];
+  del:$[.z.o like "w*";"\\";"/"];
+  p:$[b;
+    [
+      p:ssr[;2#del;del] each (0!.Q.m.M)[`p];
+      lp:first where any@/:m:p like\:/:.Q.m.SP,\:"kx[/\\]skia*";
+      .Q.m.SP[lp],del,"kx"
+    ];
+      .Q.rp "::../" 
+    ];
+  @[.z.m.axskia.init; $[not ""~condaPrefix:getenv `CONDA_PREFIX;condaPrefix;p]; {}]}[];
  
 .z.m.axskia.setFillColour:   i.setFillColour;
 .z.m.axskia.setStrokeColour: i.setStrokeColour;
